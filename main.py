@@ -1,14 +1,14 @@
 import sys
-from PyQt5 import QtCore, uic
+from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication, QMainWindow, QMessageBox, QTableWidget, QTableWidgetItem
 import sqlite3
 from addEditCoffeeForm import EditDialog
+from UI.main import Ui_MainWindow
 
-
-class MainForm(QMainWindow):
+class MainForm(Ui_MainWindow, QMainWindow):
     def __init__(self):
         super().__init__()
-        uic.loadUi('main.ui', self)
+        self.setupUi(self)
         self.action_add.triggered.connect(self.add)
         self.action_edit.triggered.connect(self.edit)
         self.display()
@@ -17,7 +17,7 @@ class MainForm(QMainWindow):
         self.tableWidget: QTableWidget = self.tableWidget
 
         self.tableWidget.clearContents()
-        con = sqlite3.connect("coffee.sqlite")
+        con = sqlite3.connect("data/coffee.sqlite")
         cur = con.cursor()
         res = cur.execute("select id, grade, roast, ground_or_beans, description, price, volume from coffee").fetchall()
         self.tableWidget.setRowCount(0)

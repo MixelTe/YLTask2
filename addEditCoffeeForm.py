@@ -1,19 +1,18 @@
-from PyQt5 import uic
 from PyQt5.QtWidgets import QDialog
 import sqlite3
+from UI.addEditCoffeeForm import Ui_Dialog
 
-
-class EditDialog(QDialog):
+class EditDialog(Ui_Dialog, QDialog):
     def __init__(self, parent, id=None):
         super().__init__(parent)
-        uic.loadUi('addEditCoffeeForm.ui', self)
+        self.setupUi(self)
         self.id = id
         if (self.id is not None):
             self.display()
         self.btn_save.clicked.connect(self.save)
 
     def display(self):
-        con = sqlite3.connect("coffee.sqlite")
+        con = sqlite3.connect("data/coffee.sqlite")
         cur = con.cursor()
         res = cur.execute("""select grade, roast, ground_or_beans, description, price, volume
                              from coffee where id = ?""", (self.id,)).fetchone()
@@ -40,7 +39,7 @@ class EditDialog(QDialog):
         price = self.inp_price.text()
         volume = self.inp_volume.text()
 
-        con = sqlite3.connect("coffee.sqlite")
+        con = sqlite3.connect("data/coffee.sqlite")
         cur = con.cursor()
         cur.execute("""update coffee set
                        grade = ?,
@@ -61,7 +60,7 @@ class EditDialog(QDialog):
         price = self.inp_price.text()
         volume = self.inp_volume.text()
 
-        con = sqlite3.connect("coffee.sqlite")
+        con = sqlite3.connect("data/coffee.sqlite")
         cur = con.cursor()
         cur.execute("""insert into coffee(grade, roast, ground_or_beans, description, price, volume)
                        values (?, ?, ?, ?, ?, ?)
